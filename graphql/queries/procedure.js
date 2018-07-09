@@ -1,0 +1,28 @@
+import gql from "graphql-tag";
+
+export default gql`
+  query procedure($procedureId: String!) {
+    procedure(procedureId: $procedureId) {
+      procedureId
+      title
+      currentStatus
+      type
+      period
+      importantDocuments {
+        editor
+        number
+        type
+        url
+      }
+      history {
+        assignment
+        initiator
+        findSpot
+        findSpotUrl
+        decision {
+          type
+        }
+      }
+    }
+  }
+`;
