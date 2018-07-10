@@ -27,10 +27,6 @@ export default ({ children }) => (
       <Footer style={{ textAlign: "center" }}>
         Ant Design ©2016 Created by Ant UED
       </Footer>
-      <style jsx global>{`
-        body {
-        }
-      `}</style>
     </Layout>
   </Layout>
 );

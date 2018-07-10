@@ -6,8 +6,7 @@ import PostList from "../components/PostList";
 export default () => (
   <Layout>
     <App>
-      <Submit />
-      <PostList />
+      <h2>Bundestag.io Admin Area</h2>
     </App>
   </Layout>
 );

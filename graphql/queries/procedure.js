@@ -23,6 +23,24 @@ export default gql`
           type
         }
       }
+      customData {
+        voteResults {
+          yes
+          no
+          abstination
+          decisionText
+          votingDocument
+          partyVotes {
+            party
+            main
+            deviants {
+              yes
+              abstination
+              no
+            }
+          }
+        }
+      }
     }
   }
 `;

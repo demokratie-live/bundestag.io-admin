@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { graphql } from "react-apollo";
-import { List, Icon, Spin } from "antd";
+import { List, Icon, Spin, Divider, Checkbox } from "antd";
 import Link from "next/link";
 
 import InfiniteScroll from "react-infinite-scroller";
@@ -10,7 +10,7 @@ import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 const PAGE_SIZE = 20;
 
 const IconText = ({ type, text }) => (
-  <span style={{ filter: "blur(2px)" }}>
+  <span style={{ filter: "blur(0px)" }}>
     <Icon type={type} style={{ marginRight: 8 }} />
     {text}
   </span>
@@ -18,7 +18,8 @@ const IconText = ({ type, text }) => (
 
 class ProcedureList extends Component {
   state = {
-    hasMore: true
+    hasMore: true,
+    onlyWithoutVoteData: false
   };
 
   loadedRowsMap = {};
@@ -27,25 +28,43 @@ class ProcedureList extends Component {
     return !!this.loadedRowsMap[index];
   };
 
-  renderItem = ({ title, procedureId }) => {
+  renderItem = ({
+    title,
+    procedureId,
+    namedVote,
+    customData: { voteResults }
+  }) => {
+    let icons = [];
+    if (voteResults.yes > 0 || voteResults.no > 0) {
+      icons.push(<Icon type="pie-chart" />);
+    }
+    if (namedVote) {
+      icons.push(<Icon type="idcard" />);
+    }
+    icons = icons
+      .reduce((prev, icon) => [...prev, icon, <Divider type="vertical" />], [])
+      .slice(0, -1);
+
+    if (
+      this.state.onlyWithoutVoteData &&
+      (voteResults.yes > 0 || voteResults.no > 0)
+    ) {
+      return <></>;
+    }
+
     return (
       <List.Item key={procedureId}>
         <List.Item.Meta
           title={
-            <Link as={`/procedure/${procedureId}`} href={`/procedure?id=${procedureId}`}><a
-              style={{
-                width: 500,
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                display: "inline-block",
-                overflow: "hidden"
-              }}
+            <Link
+              as={`/procedure/${procedureId}`}
+              href={`/procedure?id=${procedureId}`}
             >
-              {title}
-            </a></Link>
+              <a>{title}</a>
+            </Link>
           }
+          description={<>{icons.map(icon => icon)}</>}
         />
-        <div>Content</div>
       </List.Item>
     );
   };
@@ -64,6 +83,14 @@ class ProcedureList extends Component {
 
     return (
       <div>
+        <Checkbox
+          onChange={({ target: { checked } }) =>
+            this.setState({ onlyWithoutVoteData: checked })
+          }
+          value={this.state.onlyWithoutVoteData}
+        >
+          ohne Abstimmungsdaten
+        </Checkbox>
         <InfiniteScroll
           initialLoad={false}
           pageStart={0}

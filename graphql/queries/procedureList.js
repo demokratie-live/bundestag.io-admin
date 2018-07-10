@@ -8,6 +8,7 @@ const proceduresQuery = gql`
       type
       period
       currentStatus
+      namedVote
       importantDocuments {
         type
         editor

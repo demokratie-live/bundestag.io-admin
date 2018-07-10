@@ -24,20 +24,32 @@ import PROCEDURE from "../graphql/queries/procedure";
 
 const Procedure = props => {
   const {
+    loadingProcedure,
     procedureId,
     title,
     currentStatus,
     type,
     period,
     importantDocuments,
-    history
+    history,
+    customData
   } = props;
-  console.log(props);
 
-  const findSpotUrl = history.find(
-    ({ assignment, initiator }) =>
-      (assignment === "BT" && initiator === "3. Beratung") ||
-      (assignment === "BT" && initiator === "Beratung")
+  if (loadingProcedure) {
+    return (
+      <Layout>
+        <App>
+          <div>loading</div>
+        </App>
+      </Layout>
+    );
+  }
+
+  const plenaryProtocolls = history.filter(
+    ({ assignment, initiator, findSpot, ...rest }) => {
+      console.log({ assignment, initiator, findSpot, ...rest });
+      return findSpot.indexOf("BT-Plenarprotokoll") !== -1;
+    }
   );
 
   return (
@@ -64,27 +76,37 @@ const Procedure = props => {
           <DT>Dokumente</DT>
           {importantDocuments.map(document => {
             return (
-              <DD>
+              <DD key={document.number}>
                 <Link href={document.url}>
-                  <a>{`${document.type} (${document.number} – ${
-                    document.editor
+                  <a>{`${document.type} (${document.editor} – ${
+                    document.number
                   })`}</a>
                 </Link>
               </DD>
             );
           })}
-          {findSpotUrl && (
+          {plenaryProtocolls.length > 0 && (
             <>
-              <DT>Beschlussempfehlung</DT>
-              <DD>
-                <Link href={findSpotUrl.findSpotUrl}>
-                  <a>{findSpotUrl.findSpot}</a>
-                </Link>
-              </DD>
+              <DT>Plenarprotokoll</DT>
+              {plenaryProtocolls.map(({ initiator, findSpotUrl, findSpot }) => {
+                return (
+                  <DD>
+                    <Link href={findSpotUrl}>
+                      <a>
+                        {initiator} – {findSpot}
+                      </a>
+                    </Link>
+                  </DD>
+                );
+              })}
             </>
           )}
         </dl>
-        <VoteResultsForm />
+        <VoteResultsForm
+          data={customData.voteResults}
+          type={type}
+          procedureId={procedureId}
+        />
       </App>
     </Layout>
   );
@@ -96,7 +118,8 @@ export default withRouter(
       return {
         variables: {
           procedureId: query.id
-        }
+        },
+        fetchPolicy: "cache-and-network"
       };
     },
     props: ({ data: { loading, procedure, ...data } }) => {
