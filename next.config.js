@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const { ANALYZE } = process.env;
+const { ANALYZE, BUNDESTAGIO_SERVER_URL_CLIENT } = process.env;
 
 const withCss = require("@zeit/next-css");
 const withSourceMaps = require("@zeit/next-source-maps");
@@ -25,6 +25,14 @@ module.exports = withSourceMaps(
       }
 
       return config;
+    },
+    serverRuntimeConfig: {
+      // Will only be available on the server side
+      mySecret: "secret"
+    },
+    publicRuntimeConfig: {
+      // Will be available on both server and client
+      BUNDESTAGIO_SERVER_URL: BUNDESTAGIO_SERVER_URL_CLIENT
     }
   })
 );
