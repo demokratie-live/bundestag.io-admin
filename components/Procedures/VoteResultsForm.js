@@ -12,6 +12,7 @@ import {
 import { graphql } from "react-apollo";
 
 import SAVE_VOTE_RESULTS from "../../graphql/mutations/saveVoteResults";
+import F_VOTE_RESULTS from "../../graphql/fragments/voteResults";
 
 // Ant Design Sub-Elements
 const { TextArea } = Input;
@@ -52,12 +53,7 @@ class VoteResultsForm extends Component {
           message: "Vorgang wird gespeichert!"
         });
         this.props
-          .saveVoteResults({
-            variables: {
-              ...values,
-              procedureId: this.props.procedureId
-            }
-          })
+          .saveVoteResults(values)
           .then(() => {
             notification.success({
               key: "saveProcedure",
@@ -246,5 +242,17 @@ class VoteResultsForm extends Component {
 }
 
 export default graphql(SAVE_VOTE_RESULTS, {
-  name: "saveVoteResults"
+  props: ({ mutate, ownProps }) => {
+    return {
+      saveVoteResults: async data => {
+        const { procedureId } = ownProps;
+        mutate({
+          variables: {
+            ...data,
+            procedureId
+          }
+        });
+      }
+    };
+  }
 })(Form.create({})(VoteResultsForm));

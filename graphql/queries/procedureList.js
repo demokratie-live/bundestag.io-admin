@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import VoteResults from "../fragments/voteResults";
 
 const proceduresQuery = gql`
   query procedures($voteDate: [Boolean!], $limit: Int, $offset: Int) {
@@ -24,25 +25,10 @@ const proceduresQuery = gql`
           type
         }
       }
-      customData {
-        voteResults {
-          yes
-          no
-          abstination
-          decisionText
-          partyVotes {
-            party
-            main
-            deviants {
-              yes
-              abstination
-              no
-            }
-          }
-        }
-      }
+      ...VoteResults
     }
   }
+  ${VoteResults}
 `;
 
 export default proceduresQuery;

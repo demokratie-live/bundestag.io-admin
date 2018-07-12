@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+import VoteResults from "../fragments/voteResults";
+
 export default gql`
   query procedure($procedureId: String!) {
     procedure(procedureId: $procedureId) {
@@ -23,24 +25,8 @@ export default gql`
           type
         }
       }
-      customData {
-        voteResults {
-          yes
-          no
-          abstination
-          decisionText
-          votingDocument
-          partyVotes {
-            party
-            main
-            deviants {
-              yes
-              abstination
-              no
-            }
-          }
-        }
-      }
+      ...VoteResults
     }
   }
+  ${VoteResults}
 `;

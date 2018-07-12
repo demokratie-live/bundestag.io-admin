@@ -35,19 +35,30 @@ class ProcedureList extends Component {
     customData: { voteResults }
   }) => {
     let icons = [];
-    if (voteResults.yes > 0 || voteResults.no > 0) {
-      icons.push(<Icon type="pie-chart" />);
+    if (
+      voteResults.yes > 0 ||
+      voteResults.no > 0 ||
+      voteResults.abstination > 0
+    ) {
+      icons.push(<Icon key={"pie-chart"} type="pie-chart" />);
     }
     if (namedVote) {
-      icons.push(<Icon type="idcard" />);
+      icons.push(<Icon key={"idcard"} type="idcard" />);
     }
     icons = icons
-      .reduce((prev, icon) => [...prev, icon, <Divider type="vertical" />], [])
+      .reduce(
+        (prev, icon, i) => [
+          ...prev,
+          icon,
+          <Divider key={`divider-${i}`} type="vertical" />
+        ],
+        []
+      )
       .slice(0, -1);
 
     if (
       this.state.onlyWithoutVoteData &&
-      (voteResults.yes > 0 || voteResults.no > 0)
+      (voteResults.yes > 0 || voteResults.no > 0 || voteResults.abstination > 0)
     ) {
       return <></>;
     }
@@ -71,7 +82,6 @@ class ProcedureList extends Component {
 
   fetchMore = () => {
     this.props.fetchMore().then(({ data, data: { procedures } }) => {
-      console.log(data);
       if (procedures.length === 0) {
         this.setState({ hasMore: false });
       }
@@ -122,7 +132,8 @@ export default graphql(PROCEDURE_LIST, {
       voteDate: true,
       limit: PAGE_SIZE
     },
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "cache-and-network"
   },
   props: ({ data, data: { procedures, loading, fetchMore } }, props) => {
     return {

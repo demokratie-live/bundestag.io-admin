@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+import VoteResults from "../fragments/voteResults";
+
 export default gql`
   mutation saveProcedureCustomData(
     $procedureId: String!
@@ -13,23 +15,8 @@ export default gql`
       decisionText: $decisionText
       votingDocument: $votingDocument
     ) {
-      customData {
-        title
-        voteResults {
-          yes
-          no
-          abstination
-          partyVotes {
-            party
-            main
-            deviants {
-              yes
-              abstination
-              no
-            }
-          }
-        }
-      }
+      ...VoteResults
     }
   }
+  ${VoteResults}
 `;

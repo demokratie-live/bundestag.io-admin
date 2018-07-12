@@ -2,13 +2,6 @@ const express = require("express");
 const next = require("next");
 var basicAuth = require("basic-auth-connect");
 
-const testFolder = "./.next/";
-const fs = require("fs");
-
-fs.readdirSync(testFolder).forEach(file => {
-  console.log(file);
-});
-
 const dev = process.env.NODE_ENV !== "production";
 
 const app = next({ dev });
@@ -21,7 +14,9 @@ app
   .then(() => {
     const server = express();
 
-    server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
+    if (!dev) {
+      server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
+    }
 
     server.get("/procedure/:id", (req, res) => {
       const actualPage = "/procedure";

@@ -47,7 +47,6 @@ const Procedure = props => {
 
   const plenaryProtocolls = history.filter(
     ({ assignment, initiator, findSpot, ...rest }) => {
-      console.log({ assignment, initiator, findSpot, ...rest });
       return findSpot.indexOf("BT-Plenarprotokoll") !== -1;
     }
   );
@@ -90,7 +89,7 @@ const Procedure = props => {
               <DT>Plenarprotokoll</DT>
               {plenaryProtocolls.map(({ initiator, findSpotUrl, findSpot }) => {
                 return (
-                  <DD>
+                  <DD key={findSpot}>
                     <Link href={findSpotUrl}>
                       <a>
                         {initiator} – {findSpot}
