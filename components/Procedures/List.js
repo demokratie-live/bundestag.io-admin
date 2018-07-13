@@ -17,9 +17,10 @@ const IconText = ({ type, text }) => (
 );
 
 class ProcedureList extends Component {
+  static onlyWithoutVoteData = false;
   state = {
     hasMore: true,
-    onlyWithoutVoteData: false
+    onlyWithoutVoteData: ProcedureList.onlyWithoutVoteData
   };
 
   loadedRowsMap = {};
@@ -94,10 +95,11 @@ class ProcedureList extends Component {
     return (
       <div>
         <Checkbox
-          onChange={({ target: { checked } }) =>
-            this.setState({ onlyWithoutVoteData: checked })
-          }
-          value={this.state.onlyWithoutVoteData}
+          onChange={({ target: { checked } }) => {
+            this.setState({ onlyWithoutVoteData: checked });
+            ProcedureList.onlyWithoutVoteData = checked;
+          }}
+          checked={this.state.onlyWithoutVoteData}
         >
           ohne Abstimmungsdaten
         </Checkbox>
