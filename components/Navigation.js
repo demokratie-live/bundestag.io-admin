@@ -36,7 +36,14 @@ const Navigation = ({ router: { pathname } }) => (
             <span className="nav-text">Vorgänge</span>
           </a>
         </Link>
-        <Icon type="video-camera" />
+      </Menu.Item>
+      <Menu.Item key="/fractions">
+        <Link prefetch href="/fractions">
+          <a>
+            <Icon type="team" />
+            <span className="nav-text">Fraktionen</span>
+          </a>
+        </Link>
       </Menu.Item>
     </Menu>
   </Sider>
