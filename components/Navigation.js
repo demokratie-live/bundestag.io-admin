@@ -45,6 +45,14 @@ const Navigation = ({ router: { pathname } }) => (
           </a>
         </Link>
       </Menu.Item>
+      <Menu.Item key="/periods">
+        <Link prefetch href="/periods">
+          <a>
+            <Icon type="global" />
+            <span className="nav-text">Legislaturen</span>
+          </a>
+        </Link>
+      </Menu.Item>
     </Menu>
   </Sider>
 );
