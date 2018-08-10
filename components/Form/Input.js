@@ -1,13 +1,31 @@
-import { Form } from "antd";
+import { Form, Input } from "antd";
+
+const FormItem = Form.Item;
 
 export default ({
   field, // { name, value, onChange, onBlur }
-  form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+  form: { touched, errors, setFieldValue }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+  itemProps,
+  onChange,
   ...props
-}) => (
-  <div>
-    <input type="text" {...field} {...props} />
-    {touched[field.name] &&
-      errors[field.name] && <div className="error">{errors[field.name]}</div>}
-  </div>
-);
+}) => {
+  const handleChange = value => {
+    setFieldValue(field.name, value);
+  };
+
+  const errorMsg =
+    touched[field.name] && errors[field.name] ? errors[field.name] : "";
+
+  return (
+    <FormItem
+      {...itemProps}
+      help={errorMsg}
+      validateStatus={
+        errorMsg ? "error" : touched[field.name] ? "success" : null
+      }
+      hasFeedback
+    >
+      <Input {...field} {...props} onChange={handleChange} />
+    </FormItem>
+  );
+};

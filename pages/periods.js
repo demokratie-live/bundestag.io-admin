@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
-import { Collapse, Button, Row, Col } from "antd";
+import { Collapse, Button, Row, Col, Spin, Icon } from "antd";
 import { graphql } from "react-apollo";
 
 import Layout from "../components/Layout";
 import App from "../components/App";
 import List from "../components/Procedures/List";
-import FormModal from "../modules/periods/FormModal";
+import FormModalPeriod from "../modules/periods/FormModalPeriod";
+import FormModalFraction from "../modules/periods/FormModalFraction";
 
 import PERIODS from "../graphql/queries/periods";
 
@@ -32,8 +33,12 @@ class Periods extends PureComponent {
   render() {
     console.log("props", this.props);
     const {
-      data: { legislativePeriods }
+      data: { legislativePeriods, loading }
     } = this.props;
+
+    if (loading && !legislativePeriods) {
+      return <Spin />;
+    }
 
     return (
       <Layout>
@@ -62,7 +67,18 @@ class Periods extends PureComponent {
                   }`}
                   key="number"
                 >
-                  {`${number}`}
+                  <Button
+                    style={{
+                      margin: 10,
+                      backgroundColor: "#ffc53d",
+                      borderColor: "#ffd666"
+                    }}
+                    type="success"
+                    shape="circle"
+                    onClick={() => this.setState({ modalVisible: "Fraction" })}
+                  >
+                    <Icon type="plus" style={{ color: "red" }} />
+                  </Button>
                 </Panel>
               );
             })}
@@ -73,19 +89,27 @@ class Periods extends PureComponent {
             type="primary"
             shape="circle"
             icon="plus"
-            onClick={() => this.setState({ modalVisible: true })}
+            onClick={() => this.setState({ modalVisible: "Period" })}
           />
-          <FormModal
-            visible={this.state.modalVisible}
+          <FormModalPeriod
+            visible={this.state.modalVisible === "Period"}
             onClose={() => this.setState({ modalVisible: false })}
             onSave={values => {
               console.log("values", values);
               this.setState({ modalVisible: false });
             }}
           />
-          <Button type="primary" onClick={this.importOpenData}>
+          <FormModalFraction
+            visible={this.state.modalVisible === "Fraction"}
+            onClose={() => this.setState({ modalVisible: false })}
+            onSave={values => {
+              console.log("values", values);
+              this.setState({ modalVisible: false });
+            }}
+          />
+          {/* <Button type="primary" onClick={this.importOpenData}>
             Import openData
-          </Button>
+          </Button> */}
         </App>
       </Layout>
     );

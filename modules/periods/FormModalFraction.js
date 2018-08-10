@@ -1,8 +1,9 @@
-import { Modal, Form as AntdForm, Input } from "antd";
+import { Modal, Form as AntdForm } from "antd";
 import { Field, withFormik, Form } from "formik";
 import * as yup from "yup";
 
 import InputNumber from "../../components/Form/InputNumber";
+import Input from "../../components/Form/Input";
 import DatePicker from "../../components/Form/DatePicker";
 
 const FormItem = AntdForm.Item;
@@ -24,24 +25,11 @@ const FormModal = ({
     <Modal visible={visible} onOk={handleSubmit} onCancel={onClose}>
       <Field
         itemProps={{
-          label: "Number",
+          label: "Name",
           required: true
         }}
-        name="number"
-        component={InputNumber}
-      />
-      <Field
-        itemProps={{ label: "Start", required: true }}
-        name="start"
-        component={DatePicker}
-      />
-      <Field
-        itemProps={{ label: "Ende", required: true }}
-        name="end"
-        disabledDate={date =>
-          values.start && date ? date.valueOf() < values.start.valueOf() : false
-        }
-        component={DatePicker}
+        name="text"
+        component={Input}
       />
       <Field
         itemProps={{
