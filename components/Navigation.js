@@ -37,7 +37,7 @@ const Navigation = ({ router: { pathname } }) => (
           </a>
         </Link>
       </Menu.Item>
-      <Menu.Item key="/fractions">
+      {/* <Menu.Item key="/fractions">
         <Link prefetch href="/fractions">
           <a>
             <Icon type="team" />
@@ -52,7 +52,7 @@ const Navigation = ({ router: { pathname } }) => (
             <span className="nav-text">Legislaturen</span>
           </a>
         </Link>
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   </Sider>
 );
