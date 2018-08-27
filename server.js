@@ -2,7 +2,7 @@ const express = require("express");
 const next = require("next");
 var basicAuth = require("basic-auth-connect");
 
-require("./lib/parseOpenDataXml");
+// require("./lib/parseOpenDataXml");
 
 const dev = process.env.NODE_ENV !== "production";
 
