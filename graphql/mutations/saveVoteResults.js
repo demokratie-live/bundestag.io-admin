@@ -16,6 +16,7 @@ export default gql`
       votingDocument: $votingDocument
     ) {
       ...VoteResults
+      procedureId
     }
   }
   ${VoteResults}

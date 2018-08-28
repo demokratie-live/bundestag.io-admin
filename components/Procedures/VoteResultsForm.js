@@ -64,7 +64,7 @@ class VoteResultsForm extends Component {
             notification.error({
               key: "saveProcedure",
               message: "Ein Fehler ist vorgefallen",
-              description: err
+              // description: err
             });
           });
       } else {
@@ -246,7 +246,7 @@ export default graphql(SAVE_VOTE_RESULTS, {
     return {
       saveVoteResults: async data => {
         const { procedureId } = ownProps;
-        mutate({
+        return mutate({
           variables: {
             ...data,
             procedureId
