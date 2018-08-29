@@ -20,6 +20,17 @@ app
       server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
     }
 
+    server.all("/graphql", (req, res) => {
+      console.log("HOHO")
+      const url = "http://localhost:3100/graphql";
+      const request = require("request")
+      return req.pipe(request({ qs: req.query, uri: url }).on('error', function (err) {
+        console.info(err);
+        return res.sendStatus(400);
+      }))
+        .pipe(res);
+    })
+
     server.get("/procedure/:id", (req, res) => {
       const actualPage = "/procedure";
       const queryParams = { id: req.params.id };
