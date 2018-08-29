@@ -50,7 +50,8 @@ class VoteResultsForm extends Component {
         console.log("Received values of form: ", values, this.props);
         notification.info({
           key: "saveProcedure",
-          message: "Vorgang wird gespeichert!"
+          message: "Vorgang wird gespeichert!",
+          duration: 0
         });
         this.props
           .saveVoteResults(values)
