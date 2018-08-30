@@ -36,9 +36,6 @@ const FRACTIONS = [
   },
   {
     name: "Linke"
-  },
-  {
-    name: "Fraktionslos"
   }
 ];
 

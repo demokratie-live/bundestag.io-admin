@@ -16,6 +16,7 @@ export default gql`
         type
         url
       }
+      namedVote
       history {
         assignment
         initiator

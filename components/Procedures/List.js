@@ -72,7 +72,7 @@ class ProcedureList extends Component {
               as={`/procedure/${procedureId}`}
               href={`/procedure?id=${procedureId}`}
             >
-              <a>{title}</a>
+              <a>{procedureId} – {title}</a>
             </Link>
           }
           description={<>{icons.map(icon => icon)}</>}

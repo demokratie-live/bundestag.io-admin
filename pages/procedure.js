@@ -32,7 +32,8 @@ const Procedure = props => {
     period,
     importantDocuments,
     history,
-    customData
+    customData,
+    namedVote
   } = props;
 
   if (loadingProcedure) {
@@ -77,7 +78,7 @@ const Procedure = props => {
             return (
               <DD key={document.number}>
                 <Link href={document.url}>
-                  <a>{`${document.type} (${document.editor} – ${
+                  <a target="_blank">{`${document.type} (${document.editor} – ${
                     document.number
                   })`}</a>
                 </Link>
@@ -91,7 +92,7 @@ const Procedure = props => {
                 return (
                   <DD key={findSpot}>
                     <Link href={findSpotUrl}>
-                      <a>
+                      <a target="_blank">
                         {initiator} – {findSpot}
                       </a>
                     </Link>
@@ -101,11 +102,13 @@ const Procedure = props => {
             </>
           )}
         </dl>
+        {!namedVote &&
         <VoteResultsForm
           data={customData.voteResults}
           type={type}
           procedureId={procedureId}
         />
+      }
       </App>
     </Layout>
   );
