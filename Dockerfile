@@ -1,14 +1,12 @@
-FROM node:9.8.0
-# Create app directory
-RUN mkdir -p /app
-RUN ls -la /app
+FROM node:10.5.0
+
+# TMP - Yarn fix
+RUN mkdir -p /opt/yarn/bin && ln -s /opt/yarn/yarn-v1.5.1/bin/yarn /opt/yarn/bin/yarn
+
 WORKDIR /app
-# Install app dependencies
-COPY package.json /app
-COPY yarn.lock /app
+
+COPY . .
 
 RUN yarn install
-# Bundle app source
-COPY . .
 
 ENTRYPOINT [ "./entrypoint.sh" ]
