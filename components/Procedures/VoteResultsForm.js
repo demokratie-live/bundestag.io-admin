@@ -64,6 +64,7 @@ class VoteResultsForm extends Component {
               message: "Ein Fehler ist vorgefallen",
               // description: err
             });
+            console.log("Error:", err)
           });
       } else {
         console.log(err, values);
