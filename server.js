@@ -22,7 +22,7 @@ app
 
     server.all("/graphql", (req, res) => {
       console.log("HOHO")
-      const url = "http://localhost:3100/graphql";
+      const url = process.env.BUNDESTAGIO_SERVER_URL;
       const request = require("request")
       return req.pipe(request({ qs: req.query, uri: url }).on('error', function (err) {
         console.info(err);
