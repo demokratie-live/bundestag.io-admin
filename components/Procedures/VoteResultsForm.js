@@ -20,16 +20,16 @@ const FormItem = Form.Item;
 
 const FRACTIONS = [
   {
-    name: "CDU/CSU"
+    name: "Union"
   },
   {
     name: "SPD"
   },
   {
-    name: "AFD"
+    name: "AfD"
   },
   {
-    name: "B90/Grüne"
+    name: "Grüne"
   },
   {
     name: "FDP"
