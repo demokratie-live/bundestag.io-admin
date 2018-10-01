@@ -151,7 +151,7 @@ export default graphql(PROCEDURE_LIST, {
           variables: {
             limit: PAGE_SIZE,
             offset: procedures.length,
-            voteDate: true
+            manageVoteDate: true
           },
           notifyOnNetworkStatusChange: true,
           updateQuery: (prev, { fetchMoreResult }) => {
