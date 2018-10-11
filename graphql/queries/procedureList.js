@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 import VoteResults from "../fragments/voteResults";
 
 const proceduresQuery = gql`
-  query procedures($voteDate: [Boolean!], $limit: Int, $offset: Int) {
-    procedures(voteDate: $voteDate, limit: $limit, offset: $offset) {
+  query procedures($manageVoteDate: Boolean, $limit: Int, $offset: Int) {
+    procedures(manageVoteDate: $manageVoteDate, limit: $limit, offset: $offset) {
       procedureId
       title
       type
