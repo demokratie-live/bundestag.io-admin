@@ -131,7 +131,7 @@ ProcedureList.defaultProps = {
 export default graphql(PROCEDURE_LIST, {
   options: {
     variables: {
-      voteDate: true,
+      manageVoteDate: true,
       limit: PAGE_SIZE
     },
     notifyOnNetworkStatusChange: true,
