@@ -33,7 +33,7 @@ class ProcedureList extends Component {
     title,
     procedureId,
     namedVote,
-    customData: { voteResults }
+    customData: { voteResults, possibleVotingDate }
   }) => {
     let icons = [];
     if (
@@ -45,6 +45,9 @@ class ProcedureList extends Component {
     }
     if (namedVote) {
       icons.push(<Icon key={"idcard"} type="idcard" />);
+    }
+    if (possibleVotingDate) {
+      icons.push(<Icon key={"thunderbolt"} type="thunderbolt" theme="twoTone" twoToneColor="#eb2f96" />);
     }
     icons = icons
       .reduce(
