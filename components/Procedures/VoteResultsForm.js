@@ -80,7 +80,8 @@ class VoteResultsForm extends Component {
     const {
       form: { getFieldDecorator, getFieldValue, setFieldsValue },
       data,
-      type
+      type,
+      possibleVotingDate
     } = this.props;
 
     let parties = FRACTIONS;
