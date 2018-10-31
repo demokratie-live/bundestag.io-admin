@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroller";
 
 import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10000;
 
 const IconText = ({ type, text }) => (
   <span style={{ filter: "blur(0px)" }}>
@@ -33,7 +33,7 @@ class ProcedureList extends Component {
     title,
     procedureId,
     namedVote,
-    customData: { voteResults, possibleVotingDate }
+    customData: { voteResults, possibleVotingDate, expectedVotingDate }
   }) => {
     let icons = [];
     if (
@@ -47,7 +47,7 @@ class ProcedureList extends Component {
       icons.push(<Icon key={"idcard"} type="idcard" />);
     }
     if (possibleVotingDate) {
-      icons.push(<Icon key={"thunderbolt"} type="thunderbolt" theme="twoTone" twoToneColor="#eb2f96" />);
+      icons.push(<Icon key={"thunderbolt"} type="thunderbolt" theme="twoTone" twoToneColor={possibleVotingDate === expectedVotingDate?'green':"#eb2f96"} />);
     }
     icons = icons
       .reduce(
@@ -84,14 +84,6 @@ class ProcedureList extends Component {
     );
   };
 
-  fetchMore = () => {
-    this.props.fetchMore().then(({ data, data: { procedures } }) => {
-      if (procedures.length === 0) {
-        this.setState({ hasMore: false });
-      }
-    });
-  };
-
   render() {
     const { procedures, loadingProcedures } = this.props;
 
@@ -106,13 +98,6 @@ class ProcedureList extends Component {
         >
           ohne Abstimmungsdaten
         </Checkbox>
-        <InfiniteScroll
-          initialLoad={false}
-          pageStart={0}
-          loadMore={this.fetchMore}
-          hasMore={!loadingProcedures && this.state.hasMore}
-          useWindow={true}
-        >
           <List dataSource={procedures} renderItem={this.renderItem}>
             {loadingProcedures &&
               this.state.hasMore && (
@@ -121,7 +106,6 @@ class ProcedureList extends Component {
                 </div>
               )}
           </List>
-        </InfiniteScroll>
       </div>
     );
   }
@@ -140,33 +124,10 @@ export default graphql(PROCEDURE_LIST, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "cache-and-network"
   },
-  props: ({ data, data: { procedures, loading, fetchMore } }, props) => {
+  props: ({ data, data: { procedures, loading } }, props) => {
     return {
       procedures: procedures || [],
       loadingProcedures: loading,
-      fetchMore: () => {
-        if (loading) {
-          return;
-        }
-
-        return fetchMore({
-          fetchPolicy: "network-only",
-          variables: {
-            limit: PAGE_SIZE,
-            offset: procedures.length,
-            manageVoteDate: true
-          },
-          notifyOnNetworkStatusChange: true,
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return prev;
-            }
-            return Object.assign({}, prev, {
-              procedures: [...prev.procedures, ...fetchMoreResult.procedures]
-            });
-          }
-        });
-      }
     };
   }
 })(ProcedureList);
