@@ -121,7 +121,7 @@ const Procedure = props => {
               })}
             </>
           )}
-          {customData.possibleVotingDate && (
+          {customData.possibleVotingDate && !customData.expectedVotingDate && (
             <>
               <DT>Mögliches Abstimmungsdatum</DT>
                   <DD>

@@ -46,7 +46,7 @@ class ProcedureList extends Component {
     if (namedVote) {
       icons.push(<Icon key={"idcard"} type="idcard" />);
     }
-    if (possibleVotingDate) {
+    if (possibleVotingDate && !expectedVotingDate) {
       icons.push(<Icon key={"thunderbolt"} type="thunderbolt" theme="twoTone" twoToneColor={possibleVotingDate === expectedVotingDate?'green':"#eb2f96"} />);
     }
     icons = icons
