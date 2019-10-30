@@ -17,21 +17,42 @@ const IconText = ({ type, text }) => (
 );
 
 const columns = [
-  {  title: "ID",
-    dataIndex: 'procedureId',
+  {
+    title: "ID",
+    dataIndex: "procedureId",
     sorter: (a, b) => a.procedureId - b.procedureId,
-    width: '100px',
+    width: "100px"
   },
   {
     title: "Status",
-    dataIndex: 'currentStatus',
-    sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
-    width: '200px',
+    dataIndex: "currentStatus",
+    // sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
+    width: "200px"
   },
   {
     title: "Title",
-    dataIndex: 'title',
-    sorter: (a, b) => a.title.localeCompare(b.title),
+    dataIndex: "title",
+    sorter: (a, b) => a.title.localeCompare(b.title)
+  },
+  {
+    title: "Named",
+    key: "named",
+    width: "100px",
+    filters: [
+      {
+        text: 'Named',
+        value: "true",
+      },
+      {
+        text: 'not Named',
+        value: "false",
+      },
+    ],
+    filterMultiple: false,
+    onFilter: (value, {namedVote}) => value === "true" && namedVote || value === "false" && !namedVote,
+    render: ({ namedVote }) => (
+      <>{namedVote && <Icon key={"idcard"} type="idcard" />}</>
+    )
   }
 ];
 
@@ -67,7 +88,16 @@ class ProcedureList extends Component {
       icons.push(<Icon key={"idcard"} type="idcard" />);
     }
     if (possibleVotingDate && !expectedVotingDate) {
-      icons.push(<Icon key={"thunderbolt"} type="thunderbolt" theme="twoTone" twoToneColor={possibleVotingDate === expectedVotingDate?'green':"#eb2f96"} />);
+      icons.push(
+        <Icon
+          key={"thunderbolt"}
+          type="thunderbolt"
+          theme="twoTone"
+          twoToneColor={
+            possibleVotingDate === expectedVotingDate ? "green" : "#eb2f96"
+          }
+        />
+      );
     }
     icons = icons
       .reduce(
@@ -95,7 +125,9 @@ class ProcedureList extends Component {
               as={`/procedure/${procedureId}`}
               href={`/procedure?id=${procedureId}`}
             >
-              <a>{procedureId} - {currentStatus} – {title}</a>
+              <a>
+                {procedureId} - {currentStatus} – {title}
+              </a>
             </Link>
           }
           description={<>{icons.map(icon => icon)}</>}
@@ -119,14 +151,13 @@ class ProcedureList extends Component {
           ohne Abstimmungsdaten
         </Checkbox>
         <Table columns={columns} dataSource={procedures} />
-          <List dataSource={procedures} renderItem={this.renderItem}>
-            {loadingProcedures &&
-              this.state.hasMore && (
-                <div className="demo-loading-container">
-                  <Spin />
-                </div>
-              )}
-          </List>
+        <List dataSource={procedures} renderItem={this.renderItem}>
+          {loadingProcedures && this.state.hasMore && (
+            <div className="demo-loading-container">
+              <Spin />
+            </div>
+          )}
+        </List>
       </div>
     );
   }
@@ -148,7 +179,7 @@ export default graphql(PROCEDURE_LIST, {
   props: ({ data, data: { procedures, loading } }, props) => {
     return {
       procedures: procedures || [],
-      loadingProcedures: loading,
+      loadingProcedures: loading
     };
   }
 })(ProcedureList);
