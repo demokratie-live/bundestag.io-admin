@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { graphql } from "react-apollo";
-import {
-  Icon,
-  Table,
-  Input,
-  Button
-} from "antd";
+import { Icon, Table, Input, Button } from "antd";
 import Link from "next/link";
 
 import PROCEDURE_LIST from "../../graphql/queries/procedureList";
@@ -92,11 +87,15 @@ class ProcedureList extends Component {
     },
     {
       title: "Date",
-      dataIndex: "bioUpdateAt",
-      name: "bioUpdateAt",
-      sorter: (a, b) => a.bioUpdateAt && a.bioUpdateAt.localeCompare(b.bioUpdateAt),
+      dataIndex: "customData.expectedVotingDate",
+      name: "expectedVotingDate",
+      sorter: (a, b) =>
+        a.customData.expectedVotingDate &&
+        a.customData.expectedVotingDate.localeCompare(
+          b.customData.expectedVotingDate
+        ),
       width: "125px",
-      render: (value) => value ? new Date(value).toLocaleString():''
+      render: value => (value ? new Date(value).toLocaleString() : "")
     },
     {
       title: "Status",
