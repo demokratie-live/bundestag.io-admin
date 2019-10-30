@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { graphql } from "react-apollo";
-import { List, Icon, Spin, Divider, Checkbox } from "antd";
+import { List, Icon, Spin, Divider, Checkbox, Table } from "antd";
 import Link from "next/link";
 
 import InfiniteScroll from "react-infinite-scroller";
@@ -15,6 +15,25 @@ const IconText = ({ type, text }) => (
     {text}
   </span>
 );
+
+const columns = [
+  {  title: "ID",
+    dataIndex: 'procedureId',
+    sorter: (a, b) => a.procedureId - b.procedureId,
+    width: '100px',
+  },
+  {
+    title: "Status",
+    dataIndex: 'currentStatus',
+    sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
+    width: '200px',
+  },
+  {
+    title: "Title",
+    dataIndex: 'title',
+    sorter: (a, b) => a.title.localeCompare(b.title),
+  }
+];
 
 class ProcedureList extends Component {
   static onlyWithoutVoteData = false;
@@ -33,7 +52,8 @@ class ProcedureList extends Component {
     title,
     procedureId,
     namedVote,
-    customData: { voteResults, possibleVotingDate, expectedVotingDate }
+    customData: { voteResults, possibleVotingDate, expectedVotingDate },
+    currentStatus
   }) => {
     let icons = [];
     if (
@@ -75,7 +95,7 @@ class ProcedureList extends Component {
               as={`/procedure/${procedureId}`}
               href={`/procedure?id=${procedureId}`}
             >
-              <a>{procedureId} – {title}</a>
+              <a>{procedureId} - {currentStatus} – {title}</a>
             </Link>
           }
           description={<>{icons.map(icon => icon)}</>}
@@ -98,6 +118,7 @@ class ProcedureList extends Component {
         >
           ohne Abstimmungsdaten
         </Checkbox>
+        <Table columns={columns} dataSource={procedures} />
           <List dataSource={procedures} renderItem={this.renderItem}>
             {loadingProcedures &&
               this.state.hasMore && (
