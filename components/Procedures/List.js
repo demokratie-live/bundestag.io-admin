@@ -90,9 +90,8 @@ class ProcedureList extends Component {
       dataIndex: "customData.expectedVotingDate",
       name: "expectedVotingDate",
       sorter: (a, b) =>
-        a.customData.expectedVotingDate &&
         new Date(a.customData.expectedVotingDate) -
-          new Date(b.customData.expectedVotingDate),
+        new Date(b.customData.expectedVotingDate),
       width: "125px",
       render: value => (value ? new Date(value).toLocaleString() : "")
     },
