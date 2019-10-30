@@ -192,11 +192,12 @@ class ProcedureList extends Component {
   ];
 
   render() {
-    const { procedures } = this.props;
+    const { procedures, loadingProcedures } = this.props;
 
     return (
       <div>
         <Table
+          loading={loadingProcedures}
           columns={this.columns}
           dataSource={procedures}
           rowKey={procedure => procedure.procedureId}
