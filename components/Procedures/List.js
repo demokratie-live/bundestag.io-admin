@@ -108,8 +108,23 @@ class ProcedureList extends Component {
     {
       title: "Status",
       dataIndex: "currentStatus",
-      // sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
-      width: "200px"
+      width: "200px",
+      filters: this.props.procedures.reduce(
+        (prev, procedure) =>
+          procedure.currentStatus &&
+          !prev.some(({ value }) => value === procedure.currentStatus)
+            ? [
+                ...prev,
+                {
+                  text: procedure.currentStatus,
+                  value: procedure.currentStatus
+                }
+              ]
+            : prev,
+        []
+      ),
+      onFilter: (value, { currentStatus }) =>
+        value === currentStatus,
     },
     {
       title: "Title",
