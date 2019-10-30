@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import { graphql } from "react-apollo";
-import { List, Icon, Spin, Divider, Checkbox, Table } from "antd";
+import {
+  List,
+  Icon,
+  Spin,
+  Divider,
+  Checkbox,
+  Table,
+  Input,
+  Button
+} from "antd";
 import Link from "next/link";
 
 import InfiniteScroll from "react-infinite-scroller";
@@ -16,52 +25,164 @@ const IconText = ({ type, text }) => (
   </span>
 );
 
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "procedureId",
-    sorter: (a, b) => a.procedureId - b.procedureId,
-    width: "100px"
-  },
-  {
-    title: "Status",
-    dataIndex: "currentStatus",
-    // sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
-    width: "200px"
-  },
-  {
-    title: "Title",
-    dataIndex: "title",
-    sorter: (a, b) => a.title.localeCompare(b.title)
-  },
-  {
-    title: "Named",
-    key: "named",
-    width: "100px",
-    filters: [
-      {
-        text: 'Named',
-        value: "true",
-      },
-      {
-        text: 'not Named',
-        value: "false",
-      },
-    ],
-    filterMultiple: false,
-    onFilter: (value, {namedVote}) => value === "true" && namedVote || value === "false" && !namedVote,
-    render: ({ namedVote }) => (
-      <>{namedVote && <Icon key={"idcard"} type="idcard" />}</>
-    )
-  }
-];
-
 class ProcedureList extends Component {
   static onlyWithoutVoteData = false;
   state = {
     hasMore: true,
-    onlyWithoutVoteData: ProcedureList.onlyWithoutVoteData
+    onlyWithoutVoteData: ProcedureList.onlyWithoutVoteData,
+    searchText: ""
   };
+
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    }
+  });
+
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: "" });
+  };
+
+  columns = [
+    {
+      title: "ID",
+      dataIndex: "procedureId",
+      name: "procedureId",
+      sorter: (a, b) => a.procedureId - b.procedureId,
+      width: "100px",
+      ...this.getColumnSearchProps("procedureId")
+    },
+    {
+      title: "Status",
+      dataIndex: "currentStatus",
+      // sorter: (a, b) => a.currentStatus.localeCompare(b.currentStatus),
+      width: "200px"
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...this.getColumnSearchProps("title"),
+      render: (title, { procedureId }) => (
+        <Link
+          as={`/procedure/${procedureId}`}
+          href={`/procedure?id=${procedureId}`}
+        >
+          <a>{title}</a>
+        </Link>
+      )
+    },
+    {
+      title: "Named",
+      key: "named",
+      width: "100px",
+      filters: [
+        {
+          text: "Named",
+          value: "true"
+        },
+        {
+          text: "not Named",
+          value: "false"
+        }
+      ],
+      filterMultiple: false,
+      onFilter: (value, { namedVote }) =>
+        (value === "true" && namedVote) || (value === "false" && !namedVote),
+      render: ({ namedVote }) => (
+        <>{namedVote && <Icon key={"idcard"} type="idcard" />}</>
+      )
+    },
+    {
+      title: "Daten",
+      key: "data",
+      width: "100px",
+      filters: [
+        {
+          text: "mit Daten",
+          value: "true"
+        },
+        {
+          text: "ohne Daten",
+          value: "false"
+        }
+      ],
+      filterMultiple: false,
+      onFilter: (value, { namedVote, customData: { voteResults } }) =>
+        (value === "true" &&
+          (namedVote ||
+            (voteResults.yes > 0 ||
+              voteResults.no > 0 ||
+              voteResults.abstination > 0))) ||
+        (value === "false" &&
+          !(
+            voteResults.yes > 0 ||
+            voteResults.no > 0 ||
+            voteResults.abstination > 0
+          )),
+      render: ({ namedVote, customData: { voteResults } }) =>
+        (namedVote ||
+          (voteResults.yes > 0 ||
+            voteResults.no > 0 ||
+            voteResults.abstination > 0)) && (
+          <Icon key={"pie-chart"} type="pie-chart" />
+        )
+    }
+  ];
 
   loadedRowsMap = {};
 
@@ -150,7 +271,11 @@ class ProcedureList extends Component {
         >
           ohne Abstimmungsdaten
         </Checkbox>
-        <Table columns={columns} dataSource={procedures} />
+        <Table
+          columns={this.columns}
+          dataSource={procedures}
+          rowKey={procedure => procedure.procedureId}
+        />
         <List dataSource={procedures} renderItem={this.renderItem}>
           {loadingProcedures && this.state.hasMore && (
             <div className="demo-loading-container">
