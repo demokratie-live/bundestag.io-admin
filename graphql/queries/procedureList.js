@@ -10,6 +10,7 @@ const proceduresQuery = gql`
       period
       currentStatus
       namedVote
+      bioUpdateAt
       importantDocuments {
         type
         editor

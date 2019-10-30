@@ -106,6 +106,14 @@ class ProcedureList extends Component {
       ...this.getColumnSearchProps("procedureId")
     },
     {
+      title: "Date",
+      dataIndex: "bioUpdateAt",
+      name: "bioUpdateAt",
+      sorter: (a, b) => a.bioUpdateAt && a.bioUpdateAt.localeCompare(b.bioUpdateAt),
+      width: "125px",
+      render: (value) => value ? new Date(value).toLocaleString():''
+    },
+    {
       title: "Status",
       dataIndex: "currentStatus",
       width: "200px",
@@ -123,8 +131,7 @@ class ProcedureList extends Component {
             : prev,
         []
       ),
-      onFilter: (value, { currentStatus }) =>
-        value === currentStatus,
+      onFilter: (value, { currentStatus }) => value === currentStatus
     },
     {
       title: "Title",
