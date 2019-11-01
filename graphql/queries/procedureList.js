@@ -3,13 +3,18 @@ import VoteResults from "../fragments/voteResults";
 
 const proceduresQuery = gql`
   query procedures($manageVoteDate: Boolean, $limit: Int, $offset: Int) {
-    procedures(manageVoteDate: $manageVoteDate, limit: $limit, offset: $offset) {
+    procedures(
+      manageVoteDate: $manageVoteDate
+      limit: $limit
+      offset: $offset
+    ) {
       procedureId
       title
       type
       period
       currentStatus
       namedVote
+      bioUpdateAt
       importantDocuments {
         type
         editor
@@ -24,6 +29,9 @@ const proceduresQuery = gql`
         decision {
           type
         }
+      }
+      customData {
+        expectedVotingDate
       }
       ...VoteResults
     }
