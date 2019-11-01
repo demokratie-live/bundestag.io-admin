@@ -93,7 +93,11 @@ class ProcedureList extends Component {
         new Date(a.customData.expectedVotingDate) -
         new Date(b.customData.expectedVotingDate),
       width: "125px",
-      render: value => (value ? new Date(value).toLocaleString() : "")
+      render: value => {
+        const dateString = value ? new Date(value).toLocaleDateString() : "";
+        const color = new Date(value) < new Date() ? "red" : "rgb(32, 167, 54)";
+        return <span style={{ color }}>{dateString}</span>;
+      }
     },
     {
       title: "Status",
