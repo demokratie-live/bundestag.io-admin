@@ -198,7 +198,10 @@ class ProcedureList extends Component {
     return (
       <div>
         <Table
-          loading={loadingProcedures}
+          pagination={{
+            // defaultCurrent:2
+          }}
+          loading={loadingProcedures && procedures.length === 0}
           columns={this.columns}
           dataSource={procedures}
           rowKey={procedure => procedure.procedureId}
