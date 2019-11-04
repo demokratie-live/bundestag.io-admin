@@ -131,9 +131,11 @@ class ProcedureList extends Component {
               : prev,
           []
         )
-        .sort(
-          (a, b) =>
-            procedureStatis.indexOf(a.value) - procedureStatis.indexOf(b.value)
+        .sort((a, b) =>
+          a.value && b.value
+            ? procedureStatis.indexOf(a.value) -
+              procedureStatis.indexOf(b.value)
+            : 0
         ),
       onFilter: (value, { currentStatus }) => value === currentStatus
     },
