@@ -113,9 +113,13 @@ class ProcedureList extends Component {
       }
     },
     {
-      title: "Status",
+      title: "State",
       dataIndex: "currentStatus",
       width: "200px",
+      sorter: (a, b) =>
+        a.currentStatus && b.currentStatus
+          ? procedureStatis.indexOf(a.currentStatus) - procedureStatis.indexOf(b.currentStatus)
+          : 0,
       filters: this.props.procedures
         .reduce(
           (prev, procedure) =>
