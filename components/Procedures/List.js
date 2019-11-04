@@ -7,6 +7,19 @@ import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 
 const PAGE_SIZE = 10000;
 
+const procedureStatis = [
+  "Noch nicht beraten",
+  "Überwiesen",
+  "Beschlussempfehlung liegt vor",
+  "Abgelehnt",
+  "Angenommen",
+  "Verabschiedet",
+  "Bundesrat hat Vermittlungsausschuss nicht angerufen",
+  "Im Vermittlungsverfahren",
+  "Bundesrat hat zugestimmt",
+  "Verkündet"
+];
+
 class ProcedureList extends Component {
   state = {
     hasMore: true,
@@ -103,20 +116,25 @@ class ProcedureList extends Component {
       title: "Status",
       dataIndex: "currentStatus",
       width: "200px",
-      filters: this.props.procedures.reduce(
-        (prev, procedure) =>
-          procedure.currentStatus &&
-          !prev.some(({ value }) => value === procedure.currentStatus)
-            ? [
-                ...prev,
-                {
-                  text: procedure.currentStatus,
-                  value: procedure.currentStatus
-                }
-              ]
-            : prev,
-        []
-      ),
+      filters: this.props.procedures
+        .reduce(
+          (prev, procedure) =>
+            procedure.currentStatus &&
+            !prev.some(({ value }) => value === procedure.currentStatus)
+              ? [
+                  ...prev,
+                  {
+                    text: procedure.currentStatus,
+                    value: procedure.currentStatus
+                  }
+                ]
+              : prev,
+          []
+        )
+        .sort(
+          (a, b) =>
+            procedureStatis.indexOf(a.value) - procedureStatis.indexOf(b.value)
+        ),
       onFilter: (value, { currentStatus }) => value === currentStatus
     },
     {
@@ -198,7 +216,12 @@ class ProcedureList extends Component {
     return (
       <div>
         <Table
-          loading={loadingProcedures}
+          pagination={
+            {
+              // defaultCurrent:2
+            }
+          }
+          loading={loadingProcedures && procedures.length === 0}
           columns={this.columns}
           dataSource={procedures}
           rowKey={procedure => procedure.procedureId}
