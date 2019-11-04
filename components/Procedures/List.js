@@ -132,7 +132,7 @@ class ProcedureList extends Component {
           []
         )
         .sort((a, b) =>
-          a.value && b.value
+          a && b
             ? procedureStatis.indexOf(a.value) -
               procedureStatis.indexOf(b.value)
             : 0
