@@ -7,6 +7,19 @@ import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 
 const PAGE_SIZE = 10000;
 
+const procedureStatis = [
+  "Noch nicht beraten",
+  "Überwiesen",
+  "Beschlussempfehlung liegt vor",
+  "Abgelehnt",
+  "Angenommen",
+  "Verabschiedet",
+  "Bundesrat hat Vermittlungsausschuss nicht angerufen",
+  "Im Vermittlungsverfahren",
+  "Bundesrat hat zugestimmt",
+  "Verkündet"
+];
+
 class ProcedureList extends Component {
   state = {
     hasMore: true,
@@ -93,26 +106,41 @@ class ProcedureList extends Component {
         new Date(a.customData.expectedVotingDate) -
         new Date(b.customData.expectedVotingDate),
       width: "125px",
-      render: value => (value ? new Date(value).toLocaleString() : "")
+      render: value => {
+        const dateString = value ? new Date(value).toLocaleDateString() : "";
+        const color = new Date(value) < new Date() ? "red" : "rgb(32, 167, 54)";
+        return <span style={{ color }}>{dateString}</span>;
+      }
     },
     {
-      title: "Status",
+      title: "State",
       dataIndex: "currentStatus",
       width: "200px",
-      filters: this.props.procedures.reduce(
-        (prev, procedure) =>
-          procedure.currentStatus &&
-          !prev.some(({ value }) => value === procedure.currentStatus)
-            ? [
-                ...prev,
-                {
-                  text: procedure.currentStatus,
-                  value: procedure.currentStatus
-                }
-              ]
-            : prev,
-        []
-      ),
+      sorter: (a, b) =>
+        a.currentStatus && b.currentStatus
+          ? procedureStatis.indexOf(a.currentStatus) - procedureStatis.indexOf(b.currentStatus)
+          : 0,
+      filters: this.props.procedures
+        .reduce(
+          (prev, procedure) =>
+            procedure.currentStatus &&
+            !prev.some(({ value }) => value === procedure.currentStatus)
+              ? [
+                  ...prev,
+                  {
+                    text: procedure.currentStatus,
+                    value: procedure.currentStatus
+                  }
+                ]
+              : prev,
+          []
+        )
+        .sort((a, b) =>
+          a && b && a.value && b.value
+            ? procedureStatis.indexOf(a.value) -
+              procedureStatis.indexOf(b.value)
+            : 1
+        ),
       onFilter: (value, { currentStatus }) => value === currentStatus
     },
     {
@@ -194,7 +222,12 @@ class ProcedureList extends Component {
     return (
       <div>
         <Table
-          loading={loadingProcedures}
+          pagination={
+            {
+              // defaultCurrent:2
+            }
+          }
+          loading={loadingProcedures && procedures.length === 0}
           columns={this.columns}
           dataSource={procedures}
           rowKey={procedure => procedure.procedureId}
