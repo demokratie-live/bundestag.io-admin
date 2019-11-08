@@ -2,9 +2,8 @@ import gql from "graphql-tag";
 
 export default gql`
   fragment VoteResults on Procedure {
+    voteDate
     customData {
-      possibleVotingDate
-      expectedVotingDate
       voteResults {
         yes
         no

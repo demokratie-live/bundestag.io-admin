@@ -100,11 +100,11 @@ class ProcedureList extends Component {
     },
     {
       title: "Date",
-      dataIndex: "customData.expectedVotingDate",
-      name: "expectedVotingDate",
+      dataIndex: "voteDate",
+      name: "voteDate",
       sorter: (a, b) =>
-        new Date(a.customData.expectedVotingDate) -
-        new Date(b.customData.expectedVotingDate),
+        new Date(a.voteDate) -
+        new Date(b.voteDate),
       width: "125px",
       render: value => {
         const dateString = value ? new Date(value).toLocaleDateString() : "";
