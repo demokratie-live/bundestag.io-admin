@@ -30,9 +30,7 @@ const proceduresQuery = gql`
           type
         }
       }
-      customData {
-        expectedVotingDate
-      }
+      voteDate
       ...VoteResults
     }
   }

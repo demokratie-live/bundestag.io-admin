@@ -10,7 +10,6 @@ import VoteResultsForm from "../components/Procedures/VoteResultsForm";
 
 // GraphQL
 import PROCEDURE from "../graphql/queries/procedure";
-import SET_EXPECTED_VOTE_DATE from "../graphql/mutations/setExpectedVotingDate";
 
 // Ant Design Sub-Elements
 const { TextArea } = Input;
@@ -37,7 +36,6 @@ const Procedure = props => {
     history,
     customData,
     namedVote,
-    setExpectedVotingDate
   } = props;
 
   if (loadingProcedure) {
@@ -55,22 +53,6 @@ const Procedure = props => {
       return findSpot.indexOf("BT-Plenarprotokoll") !== -1;
     }
   );
-
-  const confirmPossibleVoteDate = () => {
-    setExpectedVotingDate(customData.possibleVotingDate).then((res) => {
-      notification.success({
-        key: "saveExpectedVoteDate",
-        message: "Vorgang wurde gespeichert!"
-      });
-    })
-    .catch(err => {
-      notification.error({
-        key: "saveExpectedVoteDate",
-        message: "Ein Fehler ist vorgefallen",
-      });
-      console.log("Error:", err)
-    });
-  }
 
   return (
     <Layout>
@@ -121,19 +103,6 @@ const Procedure = props => {
               })}
             </>
           )}
-          {customData.possibleVotingDate && !customData.expectedVotingDate && (
-            <>
-              <DT>Mögliches Abstimmungsdatum</DT>
-                  <DD>
-                    {customData.possibleVotingDate}
-                    {customData.possibleVotingDate !== customData.expectedVotingDate && (
-                     <Popconfirm title="Bist du dir da wirklich ganz sicher? 👀" onConfirm={confirmPossibleVoteDate} okText="Total! 😎" cancelText="Nö 🤔">
-                      &nbsp;– <Button size="small" type="danger">Übernehmen</Button>
-                    </Popconfirm>
-                    )}
-                  </DD>
-            </>
-          )}
         </dl>
         {!namedVote &&
         <VoteResultsForm
@@ -170,20 +139,5 @@ export default withRouter(
       };
     }
   }),
-  graphql(SET_EXPECTED_VOTE_DATE, {
-    props: ({ mutate, ownProps }) => {
-      return {
-        setExpectedVotingDate: async date => {
-          const { procedureId } = ownProps;
-          return mutate({
-            variables: {
-              expectedVotingDate: date,
-              procedureId
-            }
-          });
-        }
-      };
-    }
-  })
   )(Procedure)
 );
