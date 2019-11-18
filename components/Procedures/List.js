@@ -3,21 +3,23 @@ import { graphql } from "react-apollo";
 import { Icon, Table, Input, Button } from "antd";
 import Link from "next/link";
 
+import PROCEDURE_DEFINITIONS from '../../definitions/procedure';
+
 import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 
 const PAGE_SIZE = 10000;
 
 const procedureStatis = [
-  "Noch nicht beraten",
-  "Überwiesen",
-  "Beschlussempfehlung liegt vor",
-  "Abgelehnt",
-  "Angenommen",
-  "Verabschiedet",
-  "Bundesrat hat Vermittlungsausschuss nicht angerufen",
-  "Im Vermittlungsverfahren",
-  "Bundesrat hat zugestimmt",
-  "Verkündet"
+  PROCEDURE_DEFINITIONS.STATUS.NICHT_BERATEN,
+  PROCEDURE_DEFINITIONS.STATUS.UEBERWIESEN,
+  PROCEDURE_DEFINITIONS.STATUS.BESCHLUSSEMPFEHLUNG,
+  PROCEDURE_DEFINITIONS.STATUS.ABGELEHNT,
+  PROCEDURE_DEFINITIONS.STATUS.ANGENOMMEN,
+  PROCEDURE_DEFINITIONS.STATUS.VERABSCHIEDET,
+  PROCEDURE_DEFINITIONS.STATUS.BR_VERMITTLUNGSAUSSCHUSS_NICHT_ANGERUFEN,
+  PROCEDURE_DEFINITIONS.STATUS.VERMITTLUNGSVERFAHREN,
+  PROCEDURE_DEFINITIONS.STATUS.BR_ZUGESTIMMT,
+  PROCEDURE_DEFINITIONS.STATUS.VERKUENDET,
 ];
 
 class ProcedureList extends Component {
