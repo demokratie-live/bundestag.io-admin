@@ -6,6 +6,8 @@ import styled from "styled-components";
 import Link from "next/link";
 import { Form, Input, Button, Popconfirm, notification } from "antd";
 
+import PROCEDURE_DEFINITIONS from '../definitions/procedure';
+
 import VoteResultsForm from "../components/Procedures/VoteResultsForm";
 
 // GraphQL
@@ -50,7 +52,7 @@ const Procedure = props => {
 
   const plenaryProtocolls = history.filter(
     ({ assignment, initiator, findSpot, ...rest }) => {
-      return findSpot.indexOf("BT-Plenarprotokoll") !== -1;
+      return findSpot.search(PROCEDURE_DEFINITIONS.HISTORY.FINDSPOT.FIND_BT_PLENARPROTOKOLL) !== -1;
     }
   );
 
