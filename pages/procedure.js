@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { Form, Input, Button, Popconfirm, notification } from "antd";
 
-import PROCEDURE_DEFINITIONS from '../definitions/procedure';
+import {PROCEDURE as PROCEDURE_DEFINITIONS} from '@democracy-deutschland/bundestag.io-definitions';
 
 import VoteResultsForm from "../components/Procedures/VoteResultsForm";
 
