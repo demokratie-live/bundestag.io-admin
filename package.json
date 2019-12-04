@@ -8,6 +8,7 @@
     "analyze": "cross-env ANALYZE=1 next build && cat .next/stats.txt"
   },
   "dependencies": {
+    "@democracy-deutschland/bundestag.io-definitions": "^1.0.0",
     "@zeit/next-css": "^0.2.0",
     "@zeit/next-source-maps": "^0.0.2",
     "antd": "^3.6.5",

@@ -3,7 +3,7 @@ import { graphql } from "react-apollo";
 import { Icon, Table, Input, Button } from "antd";
 import Link from "next/link";
 
-import PROCEDURE_DEFINITIONS from '../../definitions/procedure';
+import {PROCEDURE as PROCEDURE_DEFINITIONS} from '@democracy-deutschland/bundestag.io-definitions';
 
 import PROCEDURE_LIST from "../../graphql/queries/procedureList";
 
