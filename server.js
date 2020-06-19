@@ -16,6 +16,10 @@ app
   .then(() => {
     const server = express();
 
+    server.get("/health-check", (req, res) => {
+      res.status(200).send("ok")
+    });
+
     if (!dev) {
       server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
     }
