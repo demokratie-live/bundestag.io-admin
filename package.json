@@ -1,6 +1,6 @@
 {
   "name": "with-apollo",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "scripts": {
     "dev": "node -r dotenv/config server.js",
     "build": "next build",

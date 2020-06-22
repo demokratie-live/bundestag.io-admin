@@ -1,6 +1,7 @@
 const express = require("express");
 const next = require("next");
 var basicAuth = require("basic-auth-connect");
+const request = require("request")
 
 // require("./lib/parseOpenDataXml");
 
@@ -27,8 +28,9 @@ app
     server.all("/graphql", (req, res) => {
       console.log("HOHO")
       const url = process.env.BUNDESTAGIO_SERVER_URL;
-      const request = require("request")
-      return req.pipe(request({ qs: req.query, uri: url }).on('error', function (err) {
+      return req.pipe(request({ qs: req.query, uri: url, headers: {
+        "bio-auth-token": process.env.BIO_EDIT_TOKEN
+      } }).on('error', function (err) {
         console.info(err);
         return res.sendStatus(400);
       }))
