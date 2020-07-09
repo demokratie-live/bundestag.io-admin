@@ -22,6 +22,8 @@ app
     });
 
     if (!dev) {
+      console.log("ADMIN_USER:", ADMIN_USER.replace(/./g, '*'))
+      console.log("ADMIN_PASSWORD:", ADMIN_PASSWORD.replace(/./g, '*'))
       server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
     }
 
