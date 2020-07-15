@@ -1,4 +1,4 @@
-FROM node:12-alpine AS BUILD_IMAGE
+FROM node:12-alpine
 
 # install next-optimized-images requirements
 RUN apk --no-cache update \ 
@@ -6,17 +6,12 @@ RUN apk --no-cache update \
     &&  rm -fr /var/cache/apk/*
 
 WORKDIR /app
+
 COPY package.json yarn.lock ./
+
 RUN yarn --frozen-lockfile
 
-FROM node:12-alpine
-
-WORKDIR /app
-
 COPY . .
-
-# copy from build image
-COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
 
 ENV NODE_ENV=development
 

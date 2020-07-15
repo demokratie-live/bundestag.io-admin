@@ -1,6 +1,6 @@
 {
   "name": "bundestag.io-admin",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "scripts": {
     "dev": "node -r dotenv/config server.js",
     "build": "next build",

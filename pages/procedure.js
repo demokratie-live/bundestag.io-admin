@@ -15,6 +15,7 @@ import VoteResultsForm from "../components/Procedures/VoteResultsForm";
 // GraphQL
 import PROCEDURE from "../graphql/queries/procedure";
 import VOTE_TEXTS from "../graphql/queries/voteTexts";
+import PlenarText from "../components/Procedures/PlenarText";
 
 // Ant Design Sub-Elements
 const { TextArea } = Input;
@@ -116,7 +117,7 @@ const Procedure = props => {
             return (
               <Panel header={`📚 ${results[1].substr(0, 50)}`} key={i}>
                 {results.map((value, i) => (
-                  <p key={i}>{value}</p>
+                  <PlenarText key={i} text={value} docIds={importantDocuments.map(({number}) => number)} />
                 ))}
               </Panel>)
           })}
