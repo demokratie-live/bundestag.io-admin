@@ -1,6 +1,7 @@
 const express = require("express");
 const next = require("next");
 var basicAuth = require("basic-auth-connect");
+const request = require("request")
 
 // require("./lib/parseOpenDataXml");
 
@@ -16,15 +17,22 @@ app
   .then(() => {
     const server = express();
 
+    server.get("/health-check", (req, res) => {
+      res.status(200).send("ok")
+    });
+
     if (!dev) {
+      console.log("ADMIN_USER:", process.env.ADMIN_USER.replace(/./g, '*'))
+      console.log("ADMIN_PASSWORD:", process.env.ADMIN_PASSWORD.replace(/./g, '*'))
       server.use(basicAuth(process.env.ADMIN_USER, process.env.ADMIN_PASSWORD));
     }
 
     server.all("/graphql", (req, res) => {
       console.log("HOHO")
       const url = process.env.BUNDESTAGIO_SERVER_URL;
-      const request = require("request")
-      return req.pipe(request({ qs: req.query, uri: url }).on('error', function (err) {
+      return req.pipe(request({ qs: req.query, uri: url, headers: {
+        "bio-auth-token": process.env.BIO_EDIT_TOKEN
+      } }).on('error', function (err) {
         console.info(err);
         return res.sendStatus(400);
       }))

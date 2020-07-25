@@ -4,7 +4,9 @@ import { withRouter } from "next/router";
 import { graphql, compose } from "react-apollo";
 import styled from "styled-components";
 import Link from "next/link";
-import { Form, Input, Button, Popconfirm, notification } from "antd";
+import { Form, Input, Collapse } from "antd";
+
+const { Panel } = Collapse;
 
 import {PROCEDURE as PROCEDURE_DEFINITIONS} from '@democracy-deutschland/bundestag.io-definitions';
 
@@ -12,6 +14,8 @@ import VoteResultsForm from "../components/Procedures/VoteResultsForm";
 
 // GraphQL
 import PROCEDURE from "../graphql/queries/procedure";
+import VOTE_TEXTS from "../graphql/queries/voteTexts";
+import PlenarText from "../components/Procedures/PlenarText";
 
 // Ant Design Sub-Elements
 const { TextArea } = Input;
@@ -38,6 +42,7 @@ const Procedure = props => {
     history,
     customData,
     namedVote,
+    voteResultTextHelper
   } = props;
 
   if (loadingProcedure) {
@@ -106,6 +111,18 @@ const Procedure = props => {
             </>
           )}
         </dl>
+        {!!voteResultTextHelper && voteResultTextHelper.length > 0 && (
+          <Collapse>
+          {voteResultTextHelper.map(({results}, i) => {
+            return (
+              <Panel header={`📚 ${results[1].substr(0, 50)}`} key={i}>
+                {results.map((value, i) => (
+                  <PlenarText key={i} text={value} docIds={importantDocuments.map(({number}) => number)} />
+                ))}
+              </Panel>)
+          })}
+        </Collapse>
+        )}
         {!namedVote &&
         <VoteResultsForm
           data={customData.voteResults}
@@ -120,26 +137,41 @@ const Procedure = props => {
 
 export default withRouter(
   compose(
-  graphql(PROCEDURE, {
-    options: ({ router: { query } }) => {
-      return {
-        variables: {
-          procedureId: query.id
-        },
-        fetchPolicy: "cache-and-network"
-      };
-    },
-    props: ({ data: { loading, procedure, ...data } }) => {
-      if (loading) {
+    graphql(PROCEDURE, {
+      options: ({ router: { query } }) => {
         return {
-          loadingProcedure: loading
+          variables: {
+            procedureId: query.id
+          },
+          fetchPolicy: "cache-and-network"
+        };
+      },
+      props: ({ data: { loading, procedure, ...data } }) => {
+        if (loading) {
+          return {
+            loadingProcedure: loading
+          };
+        }
+        return {
+          loadingProcedure: loading,
+          ...procedure
         };
       }
-      return {
-        loadingProcedure: loading,
-        ...procedure
-      };
-    }
-  }),
+    }),
+    graphql(VOTE_TEXTS, {
+      options: ({ router: { query } }) => {
+        return {
+          variables: {
+            procedureId: query.id
+          },
+          fetchPolicy: "cache-and-network"
+        };
+      },
+      props: ({ data: { voteResultTextHelper } }) => {
+        return {
+          voteResultTextHelper
+        };
+      }
+    }),
   )(Procedure)
 );
