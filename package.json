@@ -30,7 +30,7 @@
     "react-infinite-scroller": "^1.2.0",
     "request": "^2.88.0",
     "styled-components": "^4.4.1",
-    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "yup": "^0.26.0"
   },
   "author": "",
